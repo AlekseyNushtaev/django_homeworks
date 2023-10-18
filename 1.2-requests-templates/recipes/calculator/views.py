@@ -28,12 +28,10 @@ DATA = {
 #     'ингредиент2': количество2,
 #   }
 # }
-def get_recipe(request):
-    recipe_path: str = request.path
-    recipe: str = recipe_path.split('/')[1]
-    num: int = int(request.GET.get('servings', 1))
+def get_recipe(request, rec):
+    num: int = int(request.GET.get("servings", 1))
     res = {}
-    for ingr, amount in DATA[recipe].items():
+    for ingr, amount in DATA[rec].items():
         res[ingr] = num * amount
     context = {'recipe': res}
     return render(request, "calculator/index.html", context)
