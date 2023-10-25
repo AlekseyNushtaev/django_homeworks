@@ -1,5 +1,5 @@
 class RecipeConverter:
-   regex = r'(omlet|pasta|buter)'
+   regex = r'^(omlet|pasta|buter)'
    def to_python(self, value: str) -> str:
        return value
 
