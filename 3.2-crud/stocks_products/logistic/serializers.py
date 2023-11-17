@@ -1,20 +1,26 @@
 from rest_framework import serializers
 
+from logistic.models import Product, StockProduct, Stock
+
 
 class ProductSerializer(serializers.ModelSerializer):
-    # настройте сериализатор для продукта
-    pass
+    class Meta:
+        model = Product
+        fields = '__all__'
 
 
 class ProductPositionSerializer(serializers.ModelSerializer):
-    # настройте сериализатор для позиции продукта на складе
-    pass
+    class Meta:
+        model = StockProduct
+        fields = ['product', 'quantity', 'price']
 
 
 class StockSerializer(serializers.ModelSerializer):
     positions = ProductPositionSerializer(many=True)
 
-    # настройте сериализатор для склада
+    class Meta:
+        model = Stock
+        fields = ['address', 'positions']
 
     def create(self, validated_data):
         # достаем связанные данные для других таблиц
@@ -26,7 +32,13 @@ class StockSerializer(serializers.ModelSerializer):
         # здесь вам надо заполнить связанные таблицы
         # в нашем случае: таблицу StockProduct
         # с помощью списка positions
-
+        for p in positions:
+            StockProduct.objects.create(
+                stock=stock,
+                product=p['product'],
+                quantity=p['quantity'],
+                price=p['price']
+            )
         return stock
 
     def update(self, instance, validated_data):
@@ -39,5 +51,16 @@ class StockSerializer(serializers.ModelSerializer):
         # здесь вам надо обновить связанные таблицы
         # в нашем случае: таблицу StockProduct
         # с помощью списка positions
+        for p in positions:
+            StockProduct.objects.update_or_create(
+                product=p['product'],
+                stock=stock,
+                defaults={
+                    'stock': stock,
+                    'product': p['product'],
+                    'quantity': p['quantity'],
+                    'price': p['price']
+                }
+            )
 
         return stock
