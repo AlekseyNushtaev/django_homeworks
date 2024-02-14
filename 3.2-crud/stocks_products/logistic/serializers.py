@@ -28,6 +28,7 @@ class StockSerializer(serializers.ModelSerializer):
 
         # создаем склад по его параметрам
         stock = super().create(validated_data)
+        print(stock)
 
         # здесь вам надо заполнить связанные таблицы
         # в нашем случае: таблицу StockProduct
