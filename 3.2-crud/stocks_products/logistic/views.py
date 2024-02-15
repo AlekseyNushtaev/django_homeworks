@@ -1,4 +1,6 @@
 from rest_framework import filters
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from logistic.models import Product, Stock
@@ -23,3 +25,8 @@ class StockViewSet(ModelViewSet):
             queryset = queryset.filter(products=products)
         return queryset
     # при необходимости добавьте параметры фильтрации
+
+
+@api_view(['GET'])
+def sample_view(request):
+    return Response('Hello World!')
