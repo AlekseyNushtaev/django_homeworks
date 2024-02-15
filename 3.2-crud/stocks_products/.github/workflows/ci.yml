@@ -1,0 +1,5 @@
+name: Autodeploy
+
+on:
+  push:
+    branches: [video]
